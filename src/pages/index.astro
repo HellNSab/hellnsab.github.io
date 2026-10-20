@@ -1,0 +1,68 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../site';
+import { getPublishedPosts, formatDate } from '../posts';
+
+const posts = await getPublishedPosts();
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+
+<Base>
+  <section class="intro">
+    <h1>Hi, I'm Nadya.</h1>
+    <p class="muted">{SITE.role}</p>
+    <p>
+      I'm a software engineer with 9 years of experience. Today I build a public conversational AI
+      platform used every day by thousands of people around the world.
+    </p>
+    <p>
+      My day-to-day work is making AI reliable in production: LLM orchestration, evaluation,
+      monitoring, graceful degradation. I also care a lot about the human side of systems — how
+      teams make decisions, share knowledge and keep projects moving.
+    </p>
+    <p>This is where I write about what I learn along the way.</p>
+  </section>
+
+  <section class="posts">
+    <h2>Writing</h2>
+    {posts.length === 0 ? (
+      <p class="muted">First articles coming soon.</p>
+    ) : (
+      <ul>
+        {posts.map((post) => (
+          <li>
+            <a href={`${base}posts/${post.id}/`}>{post.data.title}</a>
+            {post.data.draft && <span class="draft">draft</span>}
+            <p class="muted">
+              <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+              {' · '}
+              {post.data.description}
+            </p>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+</Base>
+
+<style>
+  .intro p { margin: 0 0 1rem; }
+  .intro .muted { margin-bottom: 1.5rem; }
+
+  .posts ul { list-style: none; padding: 0; margin: 0; }
+  .posts li { margin-bottom: 1.75rem; }
+  .posts li > a { font-size: 1.1rem; font-weight: 600; text-decoration: none; }
+  .posts li > a:hover { text-decoration: underline; }
+  .posts li p { margin: 0.25rem 0 0; }
+
+  .draft {
+    margin-left: 0.5rem;
+    padding: 0.05rem 0.4rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    font-family: system-ui, sans-serif;
+    font-size: 0.7rem;
+    color: var(--muted);
+    vertical-align: middle;
+  }
+</style>

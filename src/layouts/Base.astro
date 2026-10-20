@@ -1,0 +1,177 @@
+---
+import { SITE } from '../site';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = SITE.description } = Astro.props;
+const pageTitle = title ? `${title} · ${SITE.name}` : SITE.title;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <link rel="alternate" type="application/rss+xml" title={SITE.title} href={`${base}rss.xml`} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={title ? 'article' : 'website'} />
+    <meta property="og:url" content={canonical} />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="site-name" href={base}>{SITE.name}</a>
+      <nav>
+        {SITE.links.map((link) => (
+          <a href={link.href.startsWith('http') ? link.href : `${base}${link.href}`}>{link.label}</a>
+        ))}
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <p>© {new Date().getFullYear()} {SITE.name}</p>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --bg: #fbfaf7;
+    --text: #22201c;
+    --muted: #6d6860;
+    --accent: #2f5d50;
+    --rule: #e4e0d8;
+    --code-bg: #f1eee8;
+    --max: 42rem;
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17171a;
+      --text: #e8e6e1;
+      --muted: #9b978f;
+      --accent: #8cc4b2;
+      --rule: #2d2d31;
+      --code-bg: #222226;
+      color-scheme: dark;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  html {
+    font-size: 112.5%;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, Georgia, serif;
+    line-height: 1.7;
+  }
+
+  .site-header,
+  main,
+  .site-footer {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .site-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size: 0.85rem;
+  }
+
+  .site-name {
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+  }
+
+  .site-header nav { display: flex; gap: 1.25rem; }
+  .site-header nav a { color: var(--muted); text-decoration: none; }
+  .site-header nav a:hover { color: var(--accent); }
+
+  a { color: var(--accent); text-underline-offset: 0.2em; }
+
+  h1, h2, h3 {
+    line-height: 1.25;
+    font-weight: 600;
+  }
+
+  h1 { font-size: 2rem; margin: 0 0 0.5rem; }
+  h2 { font-size: 1.35rem; margin-top: 2.5rem; }
+  h3 { font-size: 1.1rem; margin-top: 2rem; }
+
+  .muted {
+    color: var(--muted);
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size: 0.85rem;
+  }
+
+  code {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 0.85em;
+    background: var(--code-bg);
+    padding: 0.1em 0.3em;
+    border-radius: 4px;
+  }
+
+  pre {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    padding: 1rem;
+    border-radius: 6px;
+    overflow-x: auto;
+  }
+
+  pre code { background: none; padding: 0; }
+
+  blockquote {
+    margin: 1.5rem 0;
+    padding-left: 1rem;
+    border-left: 3px solid var(--rule);
+    color: var(--muted);
+  }
+
+  img { max-width: 100%; height: auto; }
+
+  hr { border: 0; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+
+  .site-footer {
+    margin-top: 5rem;
+    padding-bottom: 2rem;
+    color: var(--muted);
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size: 0.8rem;
+  }
+
+  .site-footer p {
+    border-top: 1px solid var(--rule);
+    padding-top: 1.5rem;
+    margin: 0;
+  }
+</style>
