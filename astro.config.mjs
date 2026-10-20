@@ -7,4 +7,11 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   site: 'https://hellnsab.github.io',
   base: '/blog',
+  markdown: {
+    shikiConfig: {
+      // Emit both palettes as CSS variables; Base.astro picks one per theme.
+      themes: { light: 'github-light', dark: 'github-dark' },
+      defaultColor: false,
+    },
+  },
 });

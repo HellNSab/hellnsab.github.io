@@ -10,8 +10,12 @@ This is an example article. Because `draft: true` is set above, it only shows up
 when you run the site locally (`npm run dev`) and is **never published**.
 
 To write a new article, copy this file, give it a new name (the file name becomes
-the URL, e.g. `evaluating-llm-chatbots.md` → `/posts/evaluating-llm-chatbots/`),
+the URL, e.g. `evaluating-llm-chatbots.md` → `/blog/posts/evaluating-llm-chatbots/`),
 update the title, description and date, then set `draft: false` when it's ready.
+
+To link to another article, use its full path including the `/blog` prefix, e.g.
+`[my other post](/blog/posts/evaluating-llm-chatbots/)`. Links without `/blog`
+will be broken on the live site.
 
 ## Headings, lists and code work as usual
 
